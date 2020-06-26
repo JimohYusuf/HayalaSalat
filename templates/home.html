@@ -1,17 +1,34 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <p style="font-size: 18dp; color: maroon; margin: auto;">ENTER YOUR DETAILS TO SIGN IN FOR THIS SALAT</p><br>
+    <style>
+      .button {
+        background-color:green; 
+        color: white;
+        border: 2px solid ;
+        border-radius: 6px;
+        padding: 15px 32px;
+        text-align: center; 
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+      } </style> 
+      <h1 style="font-size: 3.2em; color: maroon; margin: auto;">WELCOME TO MASJIDUL-MATROOD</h1><br><br><br><br><br>  
   </head>
   <body> 
+    <!-- <p style="font-size: 36dp; color: maroon; margin: auto;">ENTER YOUR DETAILS TO SIGN IN FOR THIS SALAT</p><br> 
     <form action="/signin" method="POST"> 
-        <label for="pass">Name:</label>
-        <input type="text" id="name" name="name"><br><br>
-        <label for="salat">Salat:</label>
-        <input type="text" id="salat" name="salat"><br><br>  
-        <label for="pass">Password:</label>
-        <input type="text" id="pass" name="pass" ><br><br>  
-        <input type="submit" value="Submit"> 
-    </form>         
+        <label for="pass" style="font-size:xx-large;" >Name:</label>
+        <input type="text" id="name" name="name" style="font-size:xx-large;"><br><br>
+        <label for="salat" style="font-size:xx-large;">Salat:</label>
+        <input type="text" id="salat" name="salat" style="font-size:xx-large;"><br><br>  
+        <label for="pass" style="font-size:xx-large;">Password:</label>
+        <input type="text" id="pass" name="pass" style="font-size:xx-large;" ><br><br>  
+        <input type="submit" value="Submit" style="font-size:xx-large;">  
+    </form><br><br><br><br>  -->
+    <input type="button" id="stats" onclick="location.href='/create_user'" value="Register with Masjidul-Matrood" class="button" style="font-size:46px;"><br><br><br><br>
+    <input type="button" id="stats" onclick="location.href='/stats'" value="See Masjidul-Matrood Users' Statistics" class="button" style="font-size:46px;"><br><br>       
   </body>
-</html> 
+</html>  

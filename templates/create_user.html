@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <p style="font-size: 18dp; color: maroon; margin: auto;">REGISTER AS A NEW USER TO MASJIDUL-MATROOD [ENTER YOUR DETAILS]</p><br>
+    <h2 style="font-size: 18dp; color: maroon; margin: auto;">REGISTER AS A NEW USER TO MASJIDUL-MATROOD [ENTER YOUR DETAILS]</h2><br>
   </head>
+  <style>
+    input[type=text] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 24px 0;  
+        box-sizing: border-box;
+        border: 2px solid maroon;
+        border-radius: 4px;
+      }
+  </style>
   <body>
     <form method="POST" action="/newuser"> 
-        <label for="pass">Name:</label> 
-        <input type="text" id="name" name="name" ><br><br> 
-        <label for="pass">Password:</label>
-        <input type="text" id="pass" name="pass" ><br><br> 
-        <input type="submit" value="Register">  
+        <label for="pass" style="font-size:xx-large;">Name:</label>  
+        <input type="text" id="name" name="name" style="font-size:xx-large;"><br><br> 
+        <label for="pass" style="font-size:xx-large;">Password:</label>
+        <input type="text" id="pass" name="pass" style="font-size:xx-large;"><br><br> 
+        <input type="submit" value="Register" style="font-size:xx-large;">  
     </form>         
   </body>
 </html> 
