@@ -610,4 +610,4 @@ def updateSalatTime(cursor_object, salat, time):
 ######################################################################################################
 if __name__ == '__main__':
     #port = int(os.environ.get('PORT', 80)) 
-    app.run(host='192.168.0.101', port=5000, debug=True)  
+    app.run(host='ec2-15-185-71-112.me-south-1.compute.amazonaws.com', port=5000, debug=True)  
