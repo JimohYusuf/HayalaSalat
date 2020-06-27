@@ -30,7 +30,7 @@
         var userRequest = new XMLHttpRequest();
         var allUsersDiv = document.getElementById("users");
 
-        userRequest.open('GET', 'http://192.168.0.101:5000/get_users');
+        userRequest.open('GET', 'http://ec2-15-185-71-112.me-south-1.compute.amazonaws.com:5000/get_users');
 
         userRequest.onload = function () {
           if (userRequest.status >= 200 && userRequest.status < 400) {
