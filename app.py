@@ -237,7 +237,7 @@ def absent():
             print(abs(time_diff_forward.seconds)) 
             print(abs(time_diff_backward.seconds)) 
 
-            if ((abs(time_diff_forward.seconds) <= 72000) or (abs(time_diff_backward.seconds) <= 72000)):   
+            if ((abs(time_diff_forward.seconds) <= 3600) or (abs(time_diff_backward.seconds) <= 3600)):    
                 for key, value in salat_dict.items():
                     if salat == value:
                         curr_salat = key
