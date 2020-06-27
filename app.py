@@ -92,7 +92,7 @@ def signin(username, upassword):
         print(abs(time_diff_forward.seconds)) 
         print(abs(time_diff_backward.seconds)) 
 
-        if ((abs(time_diff_forward.seconds) <= 72000) or (abs(time_diff_backward.seconds) <= 72000)):   
+        if ((abs(time_diff_forward.seconds) <= 3600) or (abs(time_diff_backward.seconds) <= 3600)):   
             for key, value in salat_dict.items():
                 if salat == value:
                     curr_salat = key
@@ -104,7 +104,7 @@ def signin(username, upassword):
     ####################################################
 
     if curr_salat == 'no-salat':
-        return "<p style='font-size: 1.5em; color: maroon; margin: auto;'>NO SALAT AVAILABLE NOW. SIGN IN ONLY ALLOWED WITHIN AN HOUR OF EACH SALAT<p/>" 
+        return "<h3 style='font-size: 3em; color: maroon; margin: auto;'>NO SALAT AVAILABLE NOW.</h3><br><h3 style='font-size: 1.5em;'> SIGN IN ONLY ALLOWED WITHIN AN HOUR OF EACH SALAT<h3/>" 
 
     all_masjid_users = getUsers(cur)
 
@@ -120,7 +120,7 @@ def signin(username, upassword):
                     points = int((tdelta.seconds/-60)) 
                     state = "late"
                 else:
-                    if tdelta.seconds > 600: 
+                    if tdelta.seconds > 300: 
                         return "<p style='font-size: 3em; color: maroon; margin: auto;'>NOT YET TIME TO SIGN IN FOR %s<p/>" % curr_salat.upper()
                     else:
                         state = "on-time"
@@ -132,7 +132,7 @@ def signin(username, upassword):
                     points = int((tdelta.seconds/-60)) 
                     state = "late"
                 else:
-                    if tdelta.seconds > 600:
+                    if tdelta.seconds > 300:
                         return "<p style='font-size: 3em; color: maroon; margin: auto;'>NOT YET TIME TO SIGN IN FOR %s<p/>" % curr_salat.upper()
                     else:
                         state = "on-time"
@@ -144,7 +144,7 @@ def signin(username, upassword):
                     points = int((tdelta.seconds/-60))
                     state = "late" 
                 else:
-                    if tdelta.seconds > 600:
+                    if tdelta.seconds > 300:
                         return "<p style='font-size: 3em; color: maroon; margin: auto;'>NOT YET TIME TO SIGN IN FOR %s<p/>" % curr_salat.upper() 
                     else:
                         state = "on-time"
@@ -156,7 +156,7 @@ def signin(username, upassword):
                     points = int((tdelta.seconds/-60)) 
                     state = "late"
                 else:
-                    if tdelta.seconds > 600:
+                    if tdelta.seconds > 300:
                         return "<p style='font-size: 3em; color: maroon; margin: auto;'>NOT YET TIME TO SIGN IN FOR %s<p/>" % curr_salat.upper() 
                     else:
                         state = "on-time"
@@ -168,7 +168,7 @@ def signin(username, upassword):
                     points = (tdelta.seconds/-120) 
                     state = "late" 
                 else:
-                    if tdelta.seconds > 600:
+                    if tdelta.seconds > 300:
                         return "<p style='font-size: 3em; color: maroon; margin: auto;'>NOT YET TIME TO SIGN IN FOR %s<p/>" % curr_salat.upper()  
                     else:
                         state = "on-time"
@@ -185,7 +185,7 @@ def signin(username, upassword):
 
     ###############################################################################
         try:
-            cur.execute("INSERT INTO " + name + "(date, time, salat, point, state) VALUES(%s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points,state)) 
+            cur.execute("INSERT INTO " + name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points, state, name))  
             dbConn.connection.commit() 
         except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
             print("DataError or IntegrityError")
@@ -210,9 +210,10 @@ def absentee():
 
 @app.route('/absent', methods=['POST', 'GET'])  
 def absent(): 
-    if request.method == 'POST': 
+    if request.method == 'POST':  
         data            = request.values  
-        name            = data['name'].upper() 
+        abs_name        = data['aname'].upper() 
+        sig_name        = data['sname'].upper()   
         password        = data['pass'] 
         datte           = str(date.today().strftime("%d/%m/%Y")) 
         arrival_time    = str(datetime.now().strftime("%H:%M:%S")) 
@@ -254,16 +255,16 @@ def absent():
 
 
         ######################################################
-        if name in all_masjid_users:
+        if abs_name in all_masjid_users:
             if password == "absentakhee": 
                 state = 'absent'
-                points = 0
+                points = -1 
             else:
-                return "<p style='font-size: 3em; color: maroon; margin: auto;'>WRONG PASSWORD. GO BACK TO HOME PAGE AND RETRY<p/>"
+                return "<p style='font-size: 3em; color: maroon; margin: auto;'>WRONG PASSWORD. ONLY ADMIN CAN SIGN IN AN ABSENTEE<p/>"
 
         ###############################################################################
             try:
-                cur.execute("INSERT INTO " + name + "(date, time, salat, point, state) VALUES(%s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points,state)) 
+                cur.execute("INSERT INTO " + abs_name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points, state, sig_name)) 
                 dbConn.connection.commit() 
             except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
                 print("DataError or IntegrityError")
@@ -277,9 +278,9 @@ def absent():
                 print(err)
                 return FAIL 
         else: 
-            return "NO USER WITH NAME %s" % name 
+            return "NO USER WITH NAME %s" % abs_name 
 
-        return render_template("absent.html", curr_salat=curr_salat.upper(), username=name.upper())
+        return render_template("absent.html", curr_salat=curr_salat.upper(), username=abs_name.upper())
 #####################################################################################################
 @app.route('/stats', methods=['POST', 'GET'])  
 def stats(): 
@@ -312,6 +313,18 @@ def stats():
 
     return render_template("stats.html", users_statistics=users_statistics) 
 
+#####################################################################################
+@app.route('/curr_salat_status', methods=['POST', 'GET'])  
+def curr_salat_status():  
+    cur = dbConn.connection.cursor() 
+    curr_salat_users_status = seeSignedInUsers(cur) 
+
+    all_users_status = jsonify(curr_salat_users_status)  
+    return  all_users_status 
+
+@app.route('/get_curr_status', methods=['POST', 'GET'])  
+def get_curr_status():  
+    return render_template("curr_salat_users_status.html")   
 
 #####################################################################################
 @app.route('/get_users', methods=['POST', 'GET'])  
@@ -397,6 +410,99 @@ def getUsers(cursor_object):
     
     return users 
 
+################################################################################################
+def seeSignedInUsers(cursor_object):
+    ################################################
+    datte           = str(date.today().strftime("%d/%m/%Y")) 
+    arrival_time    = str(datetime.now().strftime("%H:%M:%S"))  
+    FMT             = '%H:%M:%S'
+
+    #################################################
+
+    salat_dict = getSalatTimes(cursor_object) 
+
+    salat_timings = [salat_dict['FAJR'],salat_dict['ZUHR'],salat_dict['ASR'],salat_dict['MAGHRIB'],salat_dict['ISHA']] 
+
+
+    ###################################################
+    for salat in salat_timings:
+        time_diff_forward = datetime.strptime(arrival_time, FMT) - datetime.strptime(salat, FMT) 
+        time_diff_backward = datetime.strptime(salat, FMT) - datetime.strptime(arrival_time, FMT) 
+
+        if ((abs(time_diff_forward.seconds) <= 72000) or (abs(time_diff_backward.seconds) <= 72000)):   
+            for key, value in salat_dict.items():
+                if salat == value:
+                    curr_salat = key
+                    break 
+            break 
+        else:
+            curr_salat = 'no-salat' 
+        
+        ####################################################
+
+    try:
+        cursor_object.execute("SELECT * FROM masjid_users")
+        all_users = cursor_object.fetchall()
+    except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
+        print("DataError or IntegrityError")
+        print(err)
+        return FAIL
+    except mysql.connector.ProgrammingError as err:
+        print("Programming Error")
+        print(err) 
+        return FAIL
+    except mysql.connector.Error as err:
+        print(err)
+        return FAIL 
+
+    users = []
+    for row in all_users:
+        users.append(row[0]) 
+
+    curr_salat_users_status = []
+
+    for user in users:
+        try:
+            cursor_object.execute("SELECT * FROM " + user) 
+            user_data = cursor_object.fetchall()
+        except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
+            print("DataError or IntegrityError")
+            print(err)
+            return FAIL
+        except mysql.connector.ProgrammingError as err:
+            print("Programming Error")
+            print(err) 
+            return FAIL
+        except mysql.connector.Error as err:
+            print(err)
+            return FAIL 
+
+        signed_in = False 
+        for row in user_data:
+            if ((row[0] == datte) and (row[2] == curr_salat)):
+                signed_in = True 
+                if row[4] == "on-time":
+                    status = user + " HAS SIGNED IN FOR " + curr_salat + " : CAME ONTIME" 
+                    curr_salat_users_status.append({"status": status})  
+                elif row[4] == "late":
+                    status = user + " HAS SIGNED IN FOR " + curr_salat + " : CAME LATE" 
+                    curr_salat_users_status.append({"status": status})
+                elif row[4] == "absent":
+                    status = user + " WAS SIGNED IN FOR ABSENCE/EXCUSED BY " + row[5] 
+                    curr_salat_users_status.append({"status": status})
+        
+        if signed_in == False:
+            status = user + " HAS NOT YET SIGNED IN FOR " + curr_salat 
+            curr_salat_users_status.append({"status": status})
+    
+    return curr_salat_users_status 
+
+            
+
+
+
+
+         
 
 ################################################################################################
 def getAllUsers(cursor_object):
@@ -427,7 +533,7 @@ def addNewUser(username, password, cursor_object):
         add_user = """INSERT INTO masjid_users(username, password) VALUES (%s, %s)"""
         cursor_object.execute(add_user, (username, password)) 
 
-        cursor_object.execute("CREATE TABLE " + username + "(date varchar(30), time varchar(30), salat varchar(30), point float, state varchar(30), UNIQUE(date, salat))")  
+        cursor_object.execute("CREATE TABLE " + username + "(date varchar(30), time varchar(30), salat varchar(30), point float, state varchar(30), signer varchar(30), UNIQUE(date, salat))")  
     except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
         print("DataError or IntegrityError")
         print(err)

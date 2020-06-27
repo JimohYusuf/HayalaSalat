@@ -4,18 +4,19 @@
     <style>
       .button {
         background-color:green;  
-        color: white;
+        color: white; 
         border: 2px solid ;
-        border-radius: 6px;
+        border-radius: 16px;
         padding: 15px 32px;
         text-align: center; 
         text-decoration: none;
         display: inline-block;
         font-size: 16px;
+        font-weight: bold; 
         margin: 4px 2px;
         cursor: pointer;
       } </style> 
-      <h1 style="font-size: 3.2em; color: maroon; margin: auto;">WELCOME TO MASJIDUL-MATROOD</h1><br><br><br><br><br>  
+      <h1 style="font-size: 3.2em; color: maroon; margin: auto;"><strong>WELCOME TO MASJIDUL-MATROOD</strong></h1><br><br><br><br><br>  
   </head>
   <body> 
     <!-- <p style="font-size: 36dp; color: maroon; margin: auto;">ENTER YOUR DETAILS TO SIGN IN FOR THIS SALAT</p><br> 
@@ -28,11 +29,12 @@
         <input type="text" id="pass" name="pass" style="font-size:xx-large;" ><br><br>  
         <input type="submit" value="Submit" style="font-size:xx-large;">  
     </form><br><br><br><br>  -->
-    <input type="button" id="stats" onclick="location.href='/create_user'" value="REGISTER WITH MASJIDUL-MATROOD" class="button" style="font-size:46px;"><br><br><br><br>
+    <input type="button" id="stats" onclick="location.href='/stats'" value="SEE MASJIDUL-MATROOD USERS' STATS" class="button" style="font-size:46px;"><br><br><br><br>
     <input type="button" id="stats" onclick="location.href='/users'" value="SEE MASJIDUL-MATROOD USERS" class="button" style="font-size:46px;"><br><br><br><br>
+    <input type="button" id="stats" onclick="location.href='/get_curr_status'" value="SEE USERS STATUS FOR CURRENT SALAT" class="button" style="font-size:46px;"><br><br><br><br>
     <input type="button" id="stats" onclick="location.href='/absentee'" value="SIGN IN ABSENTEE" class="button" style="font-size:46px;"><br><br><br><br>
     <input type="button" id="stats" onclick="location.href='/salat_times'" value="SEE SALAT TIMINGS" class="button" style="font-size:46px;"><br><br><br><br>
-    <input type="button" id="stats" onclick="location.href='/update_time'" value="UPDATE A SALAT TIME" class="button" style="font-size:46px;"><br><br><br><br>
-    <input type="button" id="stats" onclick="location.href='/stats'" value="SEE MASJIDUL-MATROOD USERS' STATS" class="button" style="font-size:46px;"><br><br>       
+    <input type="button" id="stats" onclick="location.href='/update_time'" value="UPDATE A SALAT TIME" class="button" style="font-size:46px;"><br><br><br><br> 
+    <input type="button" id="stats" onclick="location.href='/create_user'" value="REGISTER WITH MASJIDUL-MATROOD" class="button" style="font-size:46px;"><br><br>      
   </body>
 </html>  
