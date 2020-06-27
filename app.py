@@ -429,7 +429,7 @@ def seeSignedInUsers(cursor_object):
         time_diff_forward = datetime.strptime(arrival_time, FMT) - datetime.strptime(salat, FMT) 
         time_diff_backward = datetime.strptime(salat, FMT) - datetime.strptime(arrival_time, FMT) 
 
-        if ((abs(time_diff_forward.seconds) <= 72000) or (abs(time_diff_backward.seconds) <= 72000)):   
+        if ((abs(time_diff_forward.seconds) <= 3600) or (abs(time_diff_backward.seconds) <= 3600)):   
             for key, value in salat_dict.items():
                 if salat == value:
                     curr_salat = key
