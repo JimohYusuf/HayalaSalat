@@ -89,8 +89,8 @@ def signin(username, upassword):
         time_diff_forward = datetime.strptime(arrival_time, FMT) - datetime.strptime(salat, FMT) 
         time_diff_backward = datetime.strptime(salat, FMT) - datetime.strptime(arrival_time, FMT) 
 
-        print(abs(time_diff_forward.seconds)) 
-        print(abs(time_diff_backward.seconds)) 
+        # print(abs(time_diff_forward.seconds)) 
+        # print(abs(time_diff_backward.seconds)) 
 
         if ((abs(time_diff_forward.seconds) <= 3600) or (abs(time_diff_backward.seconds) <= 3600)):   
             for key, value in salat_dict.items():
@@ -234,8 +234,8 @@ def absent():
             time_diff_forward = datetime.strptime(arrival_time, FMT) - datetime.strptime(salat, FMT) 
             time_diff_backward = datetime.strptime(salat, FMT) - datetime.strptime(arrival_time, FMT) 
 
-            print(abs(time_diff_forward.seconds)) 
-            print(abs(time_diff_backward.seconds)) 
+            # print(abs(time_diff_forward.seconds)) 
+            # print(abs(time_diff_backward.seconds)) 
 
             if ((abs(time_diff_forward.seconds) <= 3600) or (abs(time_diff_backward.seconds) <= 3600)):    
                 for key, value in salat_dict.items():
