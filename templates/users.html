@@ -19,12 +19,12 @@
   </head>
   <body>
     <header>
-    <h1 style="font-size: 18dp; color:gray; margin: auto;">MASJIDUL-MATROOD USERS</h1><br>
+    <h1 style="font-size: 3.5em; color:gray; margin: auto;">MASJIDUL-MATROOD USERS</h1><br>
     </header>
      
     <div id="users"></div><br> 
 
-    <input type="button" id="home" onclick="location.href='/home'" value="Go to home page" class="button" style="font-size:16px;"><br>
+    <input type="button" id="home" onclick="location.href='/home'" value="Go to home page" class="button" style="font-size:28px;"><br>
     
     <script>
         var userRequest = new XMLHttpRequest();
@@ -52,7 +52,7 @@
           var cnt = 1;
           user.forEach(function (users) {
             var userDiv = document.createElement('div');
-            userDiv.innerHTML = '<h3 style="font-size: 28dp; color:maroon; margin: auto;">' + cnt + '. ' + users.name + '</h3>'; 
+            userDiv.innerHTML = '<h3 style="font-size: 3em; color:maroon; margin: auto;">' + cnt + '. ' + users.name + '</h3><br>'; 
             allUsersDiv.appendChild(userDiv);
             cnt++;
           });

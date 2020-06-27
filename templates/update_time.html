@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .button {
+        background-color:green;  
+        color: white;
+        border: 2px solid ;
+        border-radius: 6px;
+        padding: 15px 32px;
+        text-align: center; 
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+      } </style> 
+      <h1 style="font-size: 3.2em; color: maroon; margin: auto;">UPDATE SALAT TIME HERE</h1><br><br>
+  </head>
+  <body> 
+    <p style="font-size: 2.5em; color: maroon; margin: auto;">ENTER SALAT DETAILS TO BE UPDATED</p><br> 
+    <form action="/update_salat_time" method="POST"> 
+        <label for="salat" style="font-size:xx-large;" >SALAT:</label>
+        <input type="text" id="salat" name="salat" style="font-size:xx-large;"><br><br>
+        <label for="time" style="font-size:xx-large;">NEW TIME:</label> 
+        <input type="text" id="time" name="time" style="font-size:xx-large;"><br><br> 
+        <input type="submit" value="UPDATE" style="font-size:xx-large;"> 
+    </form><br><br><br><br> 
+  </body>
+</html> 
