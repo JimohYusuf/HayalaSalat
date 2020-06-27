@@ -256,7 +256,7 @@ def absent():
 
         ######################################################
         if abs_name in all_masjid_users:
-            if password == "absentakhee": 
+            if password == "tafadal": 
                 state = 'absent'
                 points = -1 
             else:
