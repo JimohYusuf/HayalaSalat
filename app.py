@@ -16,7 +16,7 @@ from datetime import datetime, date, timedelta
 SUCCESS = "POST Success"
 FAIL    = "POST Failed"
 SALAT_INT = 3600
-SIGN_IN_INT = 3600 
+SIGN_IN_INT = 300  
 
 #flask handle
 app = Flask(__name__) 
@@ -622,7 +622,8 @@ def getLastSalat(cursor_object, name):
         return FAIL
 
     for row in all_users:
-        salat = row[2]  
+        salat = row[2]
+      
     return salat   
 
 
