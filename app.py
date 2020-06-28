@@ -16,6 +16,7 @@ from datetime import datetime, date, timedelta
 SUCCESS = "POST Success"
 FAIL    = "POST Failed"
 SALAT_INT = 3600
+SIGN_IN_INT = 3600 
 
 #flask handle
 app = Flask(__name__) 
@@ -131,7 +132,7 @@ def signin(username, upassword):
                     points = int((tdelta.seconds/-60)) 
                     state = "late"
                 else:
-                    if tdelta.seconds > 300: 
+                    if tdelta.seconds > SIGN_IN_INT: 
                         return "<p style='font-size: 3em; color: maroon; margin: auto;'>NOT YET TIME TO SIGN IN FOR %s<p/>" % curr_salat.upper()
                     else:
                         state = "on-time"
@@ -143,7 +144,7 @@ def signin(username, upassword):
                     points = int((tdelta.seconds/-60)) 
                     state = "late"
                 else:
-                    if tdelta.seconds > 300:
+                    if tdelta.seconds > SIGN_IN_INT:
                         return "<p style='font-size: 3em; color: maroon; margin: auto;'>NOT YET TIME TO SIGN IN FOR %s<p/>" % curr_salat.upper()
                     else:
                         state = "on-time"
@@ -155,7 +156,7 @@ def signin(username, upassword):
                     points = int((tdelta.seconds/-60))
                     state = "late" 
                 else:
-                    if tdelta.seconds > 300:
+                    if tdelta.seconds > SIGN_IN_INT:
                         return "<p style='font-size: 3em; color: maroon; margin: auto;'>NOT YET TIME TO SIGN IN FOR %s<p/>" % curr_salat.upper() 
                     else:
                         state = "on-time"
@@ -167,7 +168,7 @@ def signin(username, upassword):
                     points = int((tdelta.seconds/-60)) 
                     state = "late"
                 else:
-                    if tdelta.seconds > 300:
+                    if tdelta.seconds > SIGN_IN_INT:
                         return "<p style='font-size: 3em; color: maroon; margin: auto;'>NOT YET TIME TO SIGN IN FOR %s<p/>" % curr_salat.upper() 
                     else:
                         state = "on-time"
@@ -179,7 +180,7 @@ def signin(username, upassword):
                     points = (tdelta.seconds/-120) 
                     state = "late" 
                 else:
-                    if tdelta.seconds > 300:
+                    if tdelta.seconds > SIGN_IN_INT:
                         return "<p style='font-size: 3em; color: maroon; margin: auto;'>NOT YET TIME TO SIGN IN FOR %s<p/>" % curr_salat.upper()  
                     else:
                         state = "on-time"
@@ -200,7 +201,7 @@ def signin(username, upassword):
         if user_last_salat != previous_salat:
             try:
                 local_point = -10 
-                cur.execute("INSERT INTO " + name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, local_point, state, name))  
+                cur.execute("INSERT INTO " + name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, previous_salat, local_point, state, name))  
                 dbConn.connection.commit() 
             except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
                 print("DataError or IntegrityError")
@@ -279,8 +280,6 @@ def absent():
                 break
             else:
                 curr_salat = 'no-salat' 
-            
-            curr_salat = 'ASR' 
                 
         
         ####################################################
