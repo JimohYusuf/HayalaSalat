@@ -339,13 +339,16 @@ def stats():
     all_users = getUsers(cur) 
 
     all_user_stats_points = pygal.Bar() 
-    all_user_stats_states = pygal.Bar() 
+    all_user_stats_late = pygal.Bar()
+    all_user_stats_absent = pygal.Bar()  
 
-    all_user_stats_points.title = "Salat Statistics" 
-    all_user_stats_states.title = "No of time each user has arrived late"
+    all_user_stats_points.title = "SALAT STATISTICS" 
+    all_user_stats_late.title = "NO OF TIMES EACH USER HAS ARRIVED LATE"
+    all_user_stats_absent.title = "NO OF TIMES EACH USER HAS BEEN ABSENT" 
     for user in all_users: 
         total = 0
         no_late = 0
+        no_absent = 0
         cur.execute("SELECT * FROM " + user) 
         user_stat = cur.fetchall() 
 
@@ -353,14 +356,19 @@ def stats():
             total += row[3] 
             if row[4] == "late":
                 no_late += 1
+            elif row[4] == "absent":
+                no_absent += 1 
+
 
         all_user_stats_points.add(user, total) 
-        all_user_stats_states.add(user, no_late) 
+        all_user_stats_late.add(user, no_late)
+        all_user_stats_absent.add(user, no_absent) 
     
     users_statistics_points = all_user_stats_points.render_data_uri() 
-    users_statistics_states = all_user_stats_states.render_data_uri()
+    users_statistics_late   = all_user_stats_late.render_data_uri()
+    users_statistics_absent = all_user_stats_absent.render_data_uri() 
 
-    users_statistics = [users_statistics_points, users_statistics_states] 
+    users_statistics = [users_statistics_points, users_statistics_late, users_statistics_absent] 
 
     return render_template("stats.html", users_statistics=users_statistics) 
 
