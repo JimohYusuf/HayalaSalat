@@ -109,6 +109,16 @@ def signin(username, upassword):
 
     all_masjid_users = getUsers(cur)
 
+    if curr_salat == 'FAJR':
+        previous_salat = 'ISHA'
+    elif curr_salat == 'ZUHR':
+        previous_salat = 'FAJR'
+    elif curr_salat == 'ASR':
+        previous_salat = 'ZUHR'
+    elif curr_salat == 'MAGHRIB':
+        previous_salat = 'ASR'
+    elif curr_salat == 'ISHA':
+        previous_salat = 'MAGHRIB' 
 
     ######################################################
     if name in all_masjid_users:
@@ -180,11 +190,31 @@ def signin(username, upassword):
         else:
             return "<p style='font-size: 3em; color: maroon; margin: auto;'>WRONG PASSWORD. GO BACK TO HOME PAGE AND RETRY<p/>"
 
-    ############################################################################## 
-        if points < -15:
-            points = -15   
 
-    ###############################################################################
+        ############################################################################## 
+        if points < -15:
+            points = -15 
+
+        ######################################################
+        user_last_salat = getLastSalat(cur, name)  
+        if user_last_salat != previous_salat:
+            try:
+                local_point = -10 
+                cur.execute("INSERT INTO " + name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, local_point, state, name))  
+                dbConn.connection.commit() 
+            except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
+                print("DataError or IntegrityError")
+                print(err)
+                return FAIL
+            except mysql.connector.ProgrammingError as err:
+                print("Programming Error")
+                print(err) 
+                return FAIL
+            except mysql.connector.Error as err:
+                print(err)
+                return FAIL   
+
+        ###############################################################################
         try:
             cur.execute("INSERT INTO " + name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points, state, name))  
             dbConn.connection.commit() 
@@ -203,6 +233,8 @@ def signin(username, upassword):
         return render_template("create_user.html") 
 
     return render_template("welcome.html", curr_salat=curr_salat.upper(), username=username.upper())    
+
+
 ####################################################################################################
 @app.route('/absentee', methods=['POST', 'GET'])  
 def absentee():
@@ -287,7 +319,7 @@ def absent():
             except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
                 print("DataError or IntegrityError")
                 print(err)
-                return FAIL
+                return FAIL 
             except mysql.connector.ProgrammingError as err:
                 print("Programming Error")
                 print(err) 
@@ -299,6 +331,8 @@ def absent():
             return "NO USER WITH NAME %s" % abs_name 
 
         return render_template("absent.html", curr_salat=curr_salat.upper(), username=abs_name.upper())
+
+
 #####################################################################################################
 @app.route('/stats', methods=['POST', 'GET'])  
 def stats(): 
@@ -568,7 +602,30 @@ def getAUserPoint(cursor_object, name):
 
     for row in all_users:
         point = row[3] 
-    return point  
+    return point
+
+
+################################################################################################
+def getLastSalat(cursor_object, name): 
+    try:
+        cursor_object.execute("SELECT * FROM " + name + " ORDER BY time DESC LIMIT 1")  
+        all_users = cursor_object.fetchall()
+    except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
+        print("DataError or IntegrityError")
+        print(err)
+        return FAIL
+    except mysql.connector.ProgrammingError as err:
+        print("Programming Error")
+        print(err) 
+        return FAIL
+    except mysql.connector.Error as err:
+        print(err)
+        return FAIL
+
+    for row in all_users:
+        salat = row[2]  
+    return salat   
+
 
 
 #################################################################################################
