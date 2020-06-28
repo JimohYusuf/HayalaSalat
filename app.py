@@ -244,9 +244,12 @@ def absent():
                     if salat == value:
                         curr_salat = key
                         break 
-                break 
+                break
             else:
                 curr_salat = 'no-salat' 
+            
+            curr_salat = 'ASR' 
+                
         
         ####################################################
 
