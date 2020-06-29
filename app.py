@@ -207,7 +207,7 @@ def signin(username, upassword):
                 cur.execute("INSERT INTO " + name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, previous_salat, local_point, state, name))  
                 dbConn.connection.commit() 
             except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
-                print("DataError or IntegrityError")
+                print("DataError or IntegrityError") 
                 print(err)
                 return FAIL
             except mysql.connector.ProgrammingError as err:
@@ -231,8 +231,13 @@ def signin(username, upassword):
             print(err) 
             return FAIL
         except mysql.connector.Error as err:
+            print("got the error") 
             print(err)
             return FAIL 
+        except dbConn._exceptions.IntegrityError as err:
+            print("caught the exception") 
+            return FAIL 
+            
     else: 
         return render_template("create_user.html") 
 
