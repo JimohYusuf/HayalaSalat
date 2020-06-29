@@ -58,8 +58,11 @@ def newuser():
 
         cur = dbConn.connection.cursor() 
 
-        addNewUser(name, password, cur)
-    return render_template("newuser.html") 
+        response = addNewUser(name, password, cur) 
+    if response == FAIL:
+        return "<p style='font-size: 3em; color: maroon; margin: auto;'>USER ALREADY EXISTS<p/>"
+    else:
+        return render_template("newuser.html") 
 
 
 ###############################################################################################    
@@ -680,7 +683,7 @@ def addNewUser(username, password, cursor_object):
         return FAIL 
     except MySQLdb.Error as err: 
         print(err) 
-        return "<p style='font-size: 3em; color: maroon; margin: auto;'>USERNAME ALREADY EXIST OR CANNOT REGISTER USER AT THE MOMENT<p/>"
+        return FAIL
 
 ##################################################################################################
 def getUserPassword(username, cursor_object):
