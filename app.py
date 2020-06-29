@@ -198,6 +198,7 @@ def signin(username, upassword):
 
         ######################################################
         user_last_salat = getLastSalat(cur, name)  
+        print(user_last_salat) 
         if user_last_salat != previous_salat:
             try:
                 local_point = -10 
