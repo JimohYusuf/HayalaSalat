@@ -234,7 +234,7 @@ def signin(username, upassword):
             print("got the error") 
             print(err)
             return FAIL 
-        except dbConn._exceptions.IntegrityError as err:
+        except MySQLdb._exceptions.IntegrityError as err:
             print("caught the exception") 
             return FAIL 
             
