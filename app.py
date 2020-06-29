@@ -533,13 +533,14 @@ def seeSignedInUsers(cursor_object):
             print(err) 
             return FAIL
         except mysql.connector.Error as err:
-            print(err)
+            print(err) 
             return FAIL 
 
         signed_in = False 
         if curr_salat == 'no-salat':
-            status = user + "NO SALAT NOW. CHECK BACK LATER" 
+            status = "NO SALAT NOW. CHECK BACK LATER" 
             curr_salat_users_status.append({"status": status})
+            break 
         else:
             for row in user_data:
                 if ((row[0] == datte) and (row[2] == curr_salat)):
