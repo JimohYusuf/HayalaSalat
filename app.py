@@ -231,7 +231,7 @@ def signin(username, upassword):
 
         ###############################################################################
         try:
-            unique = checkUniqueness(cur,name,curr_salat,datte)
+            unique = checkUniqueness(cur,name,curr_salat,datte) 
             if unique:
                 cur.execute("INSERT INTO " + name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points, state, name))  
                 dbConn.connection.commit() 
@@ -326,17 +326,21 @@ def absent():
 
         ###############################################################################
             try:
-                if special_case == 'absence':
-                    cur.execute("INSERT INTO " + abs_name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points, state, sig_name)) 
-                    dbConn.connection.commit()
-                elif special_case == 'lateness':
-                    former_point = getAUserPoint(cur, abs_name)
-                    points = points + former_point
-                    cur.execute("DELETE FROM " + abs_name + " ORDER BY ID DESC LIMIT 1")  
-                    cur.execute("INSERT INTO " + abs_name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points, state, sig_name)) 
-                    dbConn.connection.commit()
+                unique = checkUniqueness(cur,abs_name,curr_salat,datte) 
+                if unique:
+                    if special_case == 'absence':
+                        cur.execute("INSERT INTO " + abs_name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points, state, sig_name)) 
+                        dbConn.connection.commit()
+                    elif special_case == 'lateness':
+                        former_point = getAUserPoint(cur, abs_name)
+                        points = points + former_point
+                        cur.execute("DELETE FROM " + abs_name + " ORDER BY ID DESC LIMIT 1")  
+                        cur.execute("INSERT INTO " + abs_name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points, state, sig_name)) 
+                        dbConn.connection.commit()
+                    else:
+                        return "<p style='font-size: 3em; color: maroon; margin: auto;'>SOMETHING IS NOT RIGHT. TRY AGAIN<p/>" 
                 else:
-                    return "<p style='font-size: 3em; color: maroon; margin: auto;'>SOMETHING IS NOT RIGHT. TRY AGAIN<p/>" 
+                    return ("<p style='font-size: 3em; color: maroon; margin: auto;'>USER ALREADY SIGNED IN FOR " + curr_salat + " <p/>")
             except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
                 print("DataError or IntegrityError")
                 print(err)
