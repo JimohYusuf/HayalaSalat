@@ -184,7 +184,7 @@ def signin(username, upassword):
                     points = (tdelta.seconds/-120) 
                     state = "late" 
                 else:
-                    if tdelta.seconds > SIGN_IN_INT:
+                    if tdelta.seconds > SIGN_IN_INT: 
                         return "<p style='font-size: 3em; color: maroon; margin: auto;'>NOT YET TIME TO SIGN IN FOR %s<p/>" % curr_salat.upper()  
                     else:
                         state = "on-time"
@@ -213,7 +213,7 @@ def signin(username, upassword):
                     cur.execute("INSERT INTO " + name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, previous_salat, local_point, state, name))  
                     dbConn.connection.commit() 
                 else:
-                    return "<p style='font-size: 3em; color: maroon; margin: auto;'>REQUESTED SALAT ENTRY ALREADY EXISTS IN THE DATABASE<p/>"
+                    return ("<p style='font-size: 3em; color: maroon; margin: auto;'>YOU HAVE ALREADY SIGNED IN FOR " + curr_salat + " <p/>") 
             except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
                 print("DataError or IntegrityError") 
                 print(err)
