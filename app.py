@@ -227,8 +227,12 @@ def signin(username, upassword):
 
         ###############################################################################
         try:
-            cur.execute("INSERT INTO " + name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points, state, name))  
-            dbConn.connection.commit() 
+            unique = checkUniqueness(cur,name,curr_salat,datte)
+            if unique:
+                cur.execute("INSERT INTO " + name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points, state, name))  
+                dbConn.connection.commit() 
+            else:
+                return ("<p style='font-size: 3em; color: maroon; margin: auto;'>YOU HAVE ALREADY SIGNED IN FOR " + curr_salat + " <p/>")
         except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
             print("DataError or IntegrityError")
             print(err)
@@ -242,7 +246,7 @@ def signin(username, upassword):
             return FAIL 
         except MySQLdb.Error as err: 
             print(err) 
-            return ("<p style='font-size: 3em; color: maroon; margin: auto;'>YOU HAVE ALREADY SIGNED IN FOR " + curr_salat + " <p/>")    
+            return ("<p style='font-size: 3em; color: maroon; margin: auto;'> SOMETHING WENT WRONG<p/>")    
             
     else: 
         return render_template("create_user.html") 
@@ -634,6 +638,32 @@ def getAUserPoint(cursor_object, name):
     for row in all_users:
         point = row[3] 
     return point
+
+
+################################################################################################
+def checkUniqueness(cursor_object, name, salat, date): 
+    try:
+        cursor_object.execute("SELECT * FROM " + name)  
+        all_users = cursor_object.fetchall()
+    except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
+        print("DataError or IntegrityError")
+        print(err) 
+        return FAIL
+    except mysql.connector.ProgrammingError as err:
+        print("Programming Error")
+        print(err) 
+        return FAIL
+    except mysql.connector.Error as err:
+        print(err)
+        return FAIL
+    except MySQLdb.Error as err: 
+        print(err) 
+        return "<p style='font-size: 3em; color: maroon; margin: auto;'>USER TABLE IS EMPTY<p/>" 
+
+    for row in all_users:
+        if ((row[0] == date) and (row[2] == salat)):
+            return False 
+    return True 
 
 
 ################################################################################################
