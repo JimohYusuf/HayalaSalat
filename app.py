@@ -619,7 +619,7 @@ def getAUserPoint(cursor_object, name):
 ################################################################################################
 def getLastSalat(cursor_object, name): 
     try:
-        cursor_object.execute("SELECT * FROM " + name + " ORDER BY time DESC LIMIT 1")  
+        cursor_object.execute("SELECT * FROM " + name + " ORDER BY date DESC LIMIT 1")  
         all_users = cursor_object.fetchall()
     except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
         print("DataError or IntegrityError")
