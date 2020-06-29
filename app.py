@@ -736,8 +736,8 @@ def getSalatTimes(cursor_object):
 
 def updateSalatTime(cursor_object, salat, time): 
     try:
-        cursor_object.execute("DELETE FROM salat_times WHERE salat='MAGHRIB'") 
-        cursor_object.execute("INSERT INTO salat_times VALUES ('MAGHRIB', '19:24:00')")     
+        cursor_object.execute("DELETE FROM salat_times WHERE salat=" % salat)  
+        cursor_object.execute("INSERT INTO salat_times VALUES (%s,%s)", (salat,time))     
     except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
         print("DataError or IntegrityError")
         print(err)
