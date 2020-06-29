@@ -7,7 +7,8 @@ import yaml
 import mysql.connector 
 import os 
 import pygal
-import json      
+import json
+import MySQLdb      
 
 from datetime import datetime, date, timedelta 
 
@@ -231,10 +232,9 @@ def signin(username, upassword):
             print(err) 
             return FAIL
         except mysql.connector.Error as err:
-            print("got the error") 
             print(err)
             return FAIL 
-        except MySQLdb._exceptions.IntegrityError as err:
+        except MySQLdb.Error as err: 
             print("caught the exception") 
             return FAIL 
             
