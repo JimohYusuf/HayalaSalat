@@ -217,7 +217,10 @@ def signin(username, upassword):
                 return FAIL
             except mysql.connector.Error as err:
                 print(err)
-                return FAIL   
+                return FAIL
+            except MySQLdb.Error as err: 
+                print(err) 
+                return "<p style='font-size: 3em; color: maroon; margin: auto;'>REQUESTED SALAT ENTRY ALREADY EXISTS IN THE DATABASE<p/>"   
 
         ###############################################################################
         try:
@@ -235,8 +238,8 @@ def signin(username, upassword):
             print(err)
             return FAIL 
         except MySQLdb.Error as err: 
-            print("caught the exception") 
-            return FAIL 
+            print(err) 
+            return ("<p style='font-size: 3em; color: maroon; margin: auto;'>YOU HAVE ALREADY SIGNED IN FOR " + curr_salat + " <p/>")    
             
     else: 
         return render_template("create_user.html") 
@@ -318,7 +321,7 @@ def absent():
                 elif special_case == 'lateness':
                     former_point = getAUserPoint(cur, abs_name)
                     points = points + former_point
-                    cur.execute("DELETE FROM " + abs_name + " ORDER BY time DESC LIMIT 1")  
+                    cur.execute("DELETE FROM " + abs_name + " ORDER BY date DESC LIMIT 1")  
                     cur.execute("INSERT INTO " + abs_name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points, state, sig_name)) 
                     dbConn.connection.commit()
                 else:
@@ -469,6 +472,9 @@ def getUsers(cursor_object):
     except mysql.connector.Error as err:
         print(err)
         return FAIL
+    except MySQLdb.Error as err: 
+        print(err) 
+        return "<p style='font-size: 3em; color: maroon; margin: auto;'>NO MASJID USER CURRENTLY<p/>"
 
     users = []
 
@@ -520,7 +526,10 @@ def seeSignedInUsers(cursor_object):
         return FAIL
     except mysql.connector.Error as err:
         print(err)
-        return FAIL 
+        return FAIL
+    except MySQLdb.Error as err: 
+        print(err) 
+        return "<p style='font-size: 3em; color: maroon; margin: auto;'>NO MASJID USER CURRENTLY<p/>" 
 
     users = []
     for row in all_users:
@@ -543,6 +552,9 @@ def seeSignedInUsers(cursor_object):
         except mysql.connector.Error as err:
             print(err) 
             return FAIL 
+        except MySQLdb.Error as err: 
+            print(err) 
+            return "<p style='font-size: 3em; color: maroon; margin: auto;'>NO ENTRY IN REQUESTED USER'S TABLE<p/>"
 
         signed_in = False 
         if curr_salat == 'no-salat':
@@ -570,12 +582,6 @@ def seeSignedInUsers(cursor_object):
     return curr_salat_users_status 
 
             
-
-
-
-
-         
-
 ################################################################################################
 def getAllUsers(cursor_object):
     try:
@@ -592,6 +598,9 @@ def getAllUsers(cursor_object):
     except mysql.connector.Error as err:
         print(err)
         return FAIL
+    except MySQLdb.Error as err: 
+        print(err) 
+        return "<p style='font-size: 3em; color: maroon; margin: auto;'>NO REGISTERED MASJID USER AT THE MOMENT<p/>"
 
     users = []
     for row in all_users:
@@ -602,7 +611,7 @@ def getAllUsers(cursor_object):
 ################################################################################################
 def getAUserPoint(cursor_object, name): 
     try:
-        cursor_object.execute("SELECT * FROM " + name + " ORDER BY time DESC LIMIT 1")  
+        cursor_object.execute("SELECT * FROM " + name + " ORDER BY date DESC LIMIT 1")  
         all_users = cursor_object.fetchall()
     except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
         print("DataError or IntegrityError")
@@ -615,6 +624,9 @@ def getAUserPoint(cursor_object, name):
     except mysql.connector.Error as err:
         print(err)
         return FAIL
+    except MySQLdb.Error as err: 
+        print(err) 
+        return "<p style='font-size: 3em; color: maroon; margin: auto;'>USER TABLE IS EMPTY<p/>" 
 
     for row in all_users:
         point = row[3] 
@@ -637,6 +649,9 @@ def getLastSalat(cursor_object, name):
     except mysql.connector.Error as err:
         print(err)
         return FAIL
+    except MySQLdb.Error as err: 
+        print(err) 
+        return "<p style='font-size: 3em; color: maroon; margin: auto;'>USER TABLE IS EMPTY<p/>"
 
     for row in all_users:
         salat = row[2]
@@ -663,6 +678,9 @@ def addNewUser(username, password, cursor_object):
     except mysql.connector.Error as err:
         print(err)
         return FAIL 
+    except MySQLdb.Error as err: 
+        print(err) 
+        return "<p style='font-size: 3em; color: maroon; margin: auto;'>USERNAME ALREADY EXIST OR CANNOT REGISTER USER AT THE MOMENT<p/>"
 
 ##################################################################################################
 def getUserPassword(username, cursor_object):
@@ -679,7 +697,10 @@ def getUserPassword(username, cursor_object):
         return FAIL
     except mysql.connector.Error as err:
         print(err)
-        return FAIL 
+        return FAIL
+    except MySQLdb.Error as err: 
+        print(err) 
+        return "<p style='font-size: 3em; color: maroon; margin: auto;'>USER DOES NOT EXIST<p/>" 
 
     for row in user:
         password = row[1]
@@ -702,6 +723,9 @@ def getSalatTimes(cursor_object):
     except mysql.connector.Error as err:
         print(err)
         return FAIL 
+    except MySQLdb.Error as err: 
+        print(err) 
+        return "<p style='font-size: 3em; color: maroon; margin: auto;'>SALAT TIMES HAVE NOT BEEN SET YET<p/>"
 
     times_dict = {}
 
@@ -712,7 +736,8 @@ def getSalatTimes(cursor_object):
 
 def updateSalatTime(cursor_object, salat, time): 
     try:
-        cursor_object.execute("UPDATE salat_times SET time=%s WHERE salat=%s", (time,salat))     
+        cursor_object.execute("DELETE FROM salat_times WHERE salat=%s" % salat) 
+        cursor_object.execute("INSERT INTO salat_times VALUES (%s,%s)", (salat,time))     
     except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
         print("DataError or IntegrityError")
         print(err)
@@ -723,7 +748,10 @@ def updateSalatTime(cursor_object, salat, time):
         return FAIL
     except mysql.connector.Error as err:
         print(err)
-        return FAIL 
+        return FAIL
+    except MySQLdb.Error as err: 
+        print(err) 
+        return "<p style='font-size: 3em; color: maroon; margin: auto;'>THAT SALAT WAS NOT BROUGHT BY THE PROPHET HENCE DOES NOT EXIST<p/>" 
 
 ######################################################################################################
 if __name__ == '__main__':
