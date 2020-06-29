@@ -17,7 +17,7 @@ from datetime import datetime, date, timedelta
 SUCCESS = "POST Success"
 FAIL    = "POST Failed"
 SALAT_INT = 3600
-SIGN_IN_INT = 1500 
+SIGN_IN_INT = 600  
 
 #flask handle
 app = Flask(__name__) 
@@ -324,7 +324,7 @@ def absent():
                 elif special_case == 'lateness':
                     former_point = getAUserPoint(cur, abs_name)
                     points = points + former_point
-                    cur.execute("DELETE FROM " + abs_name + " ORDER BY date DESC LIMIT 1")  
+                    cur.execute("DELETE FROM " + abs_name + " ORDER BY ID DESC LIMIT 1")  
                     cur.execute("INSERT INTO " + abs_name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, curr_salat, points, state, sig_name)) 
                     dbConn.connection.commit()
                 else:
@@ -614,7 +614,7 @@ def getAllUsers(cursor_object):
 ################################################################################################
 def getAUserPoint(cursor_object, name): 
     try:
-        cursor_object.execute("SELECT * FROM " + name + " ORDER BY date DESC LIMIT 1")  
+        cursor_object.execute("SELECT * FROM " + name + " ORDER BY ID DESC LIMIT 1")  
         all_users = cursor_object.fetchall()
     except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
         print("DataError or IntegrityError")
@@ -639,7 +639,7 @@ def getAUserPoint(cursor_object, name):
 ################################################################################################
 def getLastSalat(cursor_object, name): 
     try:
-        cursor_object.execute("SELECT * FROM " + name + " ORDER BY date DESC LIMIT 1")  
+        cursor_object.execute("SELECT * FROM " + name + " ORDER BY ID DESC LIMIT 1")  
         all_users = cursor_object.fetchall()
     except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
         print("DataError or IntegrityError")
