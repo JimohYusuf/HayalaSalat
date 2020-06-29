@@ -208,8 +208,12 @@ def signin(username, upassword):
         if user_last_salat != previous_salat:
             try:
                 local_point = -10 
-                cur.execute("INSERT INTO " + name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, previous_salat, local_point, state, name))  
-                dbConn.connection.commit() 
+                unique = checkUniqueness(cur,name,curr_salat,datte)
+                if unique:
+                    cur.execute("INSERT INTO " + name + "(date, time, salat, point, state, signer) VALUES(%s, %s, %s, %s, %s, %s)", (datte, arrival_time, previous_salat, local_point, state, name))  
+                    dbConn.connection.commit() 
+                else:
+                    return "<p style='font-size: 3em; color: maroon; margin: auto;'>REQUESTED SALAT ENTRY ALREADY EXISTS IN THE DATABASE<p/>"
             except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
                 print("DataError or IntegrityError") 
                 print(err)
@@ -246,7 +250,7 @@ def signin(username, upassword):
             return FAIL 
         except MySQLdb.Error as err: 
             print(err) 
-            return ("<p style='font-size: 3em; color: maroon; margin: auto;'> SOMETHING WENT WRONG<p/>")    
+            return ("<p style='font-size: 3em; color: maroon; margin: auto;'> SOMETHING WENT WRONG<p/>")     
             
     else: 
         return render_template("create_user.html") 
