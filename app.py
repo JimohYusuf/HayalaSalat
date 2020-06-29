@@ -312,7 +312,7 @@ def absent():
                     points = 5 
                 elif special_case == 'absence':
                     state = 'absent'
-                    points = -2 
+                    points = 0  
             else:
                 return "<p style='font-size: 3em; color: maroon; margin: auto;'>WRONG PASSWORD. ONLY ADMIN CAN SIGN IN AN ABSENTEE<p/>"
 
@@ -669,7 +669,7 @@ def addNewUser(username, password, cursor_object):
         add_user = """INSERT INTO masjid_users(username, password) VALUES (%s, %s)"""
         cursor_object.execute(add_user, (username, password)) 
 
-        cursor_object.execute("CREATE TABLE " + username + "(date varchar(30), time varchar(30), salat varchar(30), point float, state varchar(30), signer varchar(30), UNIQUE(date, salat))")  
+        cursor_object.execute("CREATE TABLE " + username + "(int ID AUTO_INCREMENT, date varchar(30), time varchar(30), salat varchar(30), point float, state varchar(30), signer varchar(30), UNIQUE(date, salat))")  
     except (mysql.connector.IntegrityError, mysql.connector.DataError) as err:
         print("DataError or IntegrityError")
         print(err)
