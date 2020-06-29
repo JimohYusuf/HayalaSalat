@@ -17,7 +17,7 @@ from datetime import datetime, date, timedelta
 SUCCESS = "POST Success"
 FAIL    = "POST Failed"
 SALAT_INT = 3600
-SIGN_IN_INT = 300  
+SIGN_IN_INT = 1500 
 
 #flask handle
 app = Flask(__name__) 
