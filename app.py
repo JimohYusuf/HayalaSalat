@@ -48,6 +48,17 @@ def home():
     return render_template("home.html") 
 
 
+#############################################################################################
+@app.route('/watch', methods=['POST', 'GET'])  
+def watch():
+    if request.method == 'POST': 
+        data            = request.get_json(force=True)
+        print(data)
+        name            = data["heartRateVal"]
+    return "SUCCESS"
+
+
+
 ##############################################################################################
 @app.route('/newuser', methods=['POST', 'GET'])  
 def newuser():
@@ -797,4 +808,4 @@ def updateSalatTime(cursor_object, salat, time):
 ######################################################################################################
 if __name__ == '__main__':
     #port = int(os.environ.get('PORT', 80)) 
-    app.run(host='ec2-15-185-71-112.me-south-1.compute.amazonaws.com', port=5000, debug=True)  
+    app.run(host='ec2-157-175-91-180.me-south-1.compute.amazonaws.com', port=5000, debug=True)  
