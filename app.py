@@ -53,9 +53,12 @@ def home():
 def watch():
     if request.method == 'POST': 
         data            = request.get_json(force=True)
-        print(data)
-        name            = data["heartRateVal"]
-    return "SUCCESS"
+        try:
+            HRvalue         = int(data["heartRateVal"]) 
+        except: 
+            print(e) 
+        print(HRvalue)
+    return "SUCCESS" 
 
 
 
